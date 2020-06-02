@@ -10,10 +10,6 @@ export default function Home() {
 
   const onSubmit = useCallback((e) => {
     e.preventDefault()
-    // let repoA = document.querySelector('input[name="repoA"]')
-    // let repoB = document.querySelector('input[name="repoB"]')
-    // repoA = repoA.value || repoA.placeholder
-    // repoB = repoB.value || repoB.placeholder
 
     let repoStrings = repos.map((repo) => {
       return repo.replace(/^https:\/\/github.com\//i, '')
@@ -27,7 +23,7 @@ export default function Home() {
 
     console.log(`/compare${url.join('')}`)
 
-    // window.location.href = `/compare${url}`
+    window.location.href = `/compare${url.join('')}`
   })
 
   return (
