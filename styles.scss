@@ -1,18 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Bentham&family=Roboto+Condensed:wght@400;700&display=swap');
+
 $background: #fcfcf5;
 $shadow: #e0e1dc;
 $green: #375b69;
 $red: #df5e68;
+$border: 3px solid $green;
 
 body {
   padding: 20px 20px 60px;
   margin: 0;
   background: $background;
   color: $green;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+h1,
+h2 {
+  font-family: 'Bentham', serif;
+}
+
+h1 {
+  text-shadow: -5px 3px $shadow;
 }
 
 .container {
   position: absolute;
-  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  text-align: center;
+
+  h1 {
+    font-size: 5rem;
+    color: $red;
+    margin-bottom: 0;
+  }
+  h2 {
+    margin: 0;
+    margin-bottom: 3rem;
+  }
+  textarea {
+    padding: 10px;
+    box-sizing: border-box;
+    min-width: 500px;
+    min-height: 200px;
+    background: $background;
+    color: $green;
+    border: $border;
+    &:focus {
+      outline-style: dotted;
+    }
+  }
+  button {
+    width: 200px;
+    height: 50px;
+    background: $green;
+    color: $background;
+    border: 3px double $background;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    &:focus {
+      outline-style: dotted;
+    }
+  }
+}
+
+main {
+  h1 {
+    font-size: 4rem;
+    margin: 0;
+  }
+  h2 span {
+    color: $red;
+  }
+  table {
+    border-collapse: collapse;
+    margin-bottom: 30px;
+
+    th {
+      border-bottom: $border;
+      text-align: left;
+    }
+
+    .lead {
+      border-right: $border;
+    }
+
+    th,
+    td {
+      min-width: 200px;
+      padding: 10px;
+    }
+
+    th a {
+      color: $green;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    td a {
+      color: $red;
+    }
+  }
+  .goback {
+    text-decoration: none;
+    color: $red;
+    &:hover {
+      font-weight: bold;
+    }
+  }
 }
