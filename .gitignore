@@ -12,6 +12,11 @@
 /.next/
 /out/
 
+# next-on-netlify
+/out_publish/
+/out_functions/
+/404.html
+
 # production
 /build
 
