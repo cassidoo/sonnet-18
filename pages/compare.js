@@ -1,52 +1,52 @@
 import { useRouter } from 'next/router'
 import { Octokit } from '@octokit/rest'
 
-export function getStaticPaths() {
-  return { paths: [], fallback: true }
-}
+// export function getStaticPaths() {
+//   return { paths: [], fallback: true }
+// }
 
-export async function getStaticProps({ params }) {
-  const repos = params.slug
+// export async function getStaticProps({ params }) {
+//   const repos = params.slug
 
-  let repoData = []
-  let repoCommits = []
+//   let repoData = []
+//   let repoCommits = []
 
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_KEY,
-    userAgent: 'sonnet-18 v1.0.0',
-    baseUrl: 'https://api.github.com',
-  })
+//   const octokit = new Octokit({
+//     auth: process.env.GITHUB_KEY,
+//     userAgent: 'sonnet-18 v1.0.0',
+//     baseUrl: 'https://api.github.com',
+//   })
 
-  for (let r of repos) {
-    let ownerRepo = r.split('#')
+//   for (let r of repos) {
+//     let ownerRepo = r.split('#')
 
-    const repoRes = await octokit.repos.get({
-      owner: ownerRepo[0],
-      repo: ownerRepo[1],
-    })
+//     const repoRes = await octokit.repos.get({
+//       owner: ownerRepo[0],
+//       repo: ownerRepo[1],
+//     })
 
-    repoData.push(repoRes.data)
+//     repoData.push(repoRes.data)
 
-    const repoCom = await octokit.repos.getCommitActivityStats({
-      owner: ownerRepo[0],
-      repo: ownerRepo[1],
-    })
+//     const repoCom = await octokit.repos.getCommitActivityStats({
+//       owner: ownerRepo[0],
+//       repo: ownerRepo[1],
+//     })
 
-    let totals = 0
-    repoCom.data.map((stat) => {
-      totals += stat.total
-    })
+//     let totals = 0
+//     repoCom.data.map((stat) => {
+//       totals += stat.total
+//     })
 
-    repoCommits.push(totals)
-  }
+//     repoCommits.push(totals)
+//   }
 
-  return {
-    props: { repos, repoData, repoCommits },
+//   return {
+//     props: { repos, repoData, repoCommits },
 
-    // Incremental re-generation:
-    unstable_revalidate: true,
-  }
-}
+//     // Incremental re-generation:
+//     unstable_revalidate: true,
+//   }
+// }
 
 export default function Compare(props) {
   const router = useRouter()
@@ -113,4 +113,42 @@ export default function Compare(props) {
       </table>
     </main>
   )
+}
+
+Compare.getInitialProps = async ({ query }) => {
+  let repos = query.repos.split(',')
+
+  let repoData = []
+  let repoCommits = []
+
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_KEY,
+    userAgent: 'sonnet-18 v1.0.0',
+    baseUrl: 'https://api.github.com',
+  })
+
+  for (let r of repos) {
+    let ownerRepo = r.split('#')
+
+    const repoRes = await octokit.repos.get({
+      owner: ownerRepo[0],
+      repo: ownerRepo[1],
+    })
+
+    repoData.push(repoRes.data)
+
+    const repoCom = await octokit.repos.getCommitActivityStats({
+      owner: ownerRepo[0],
+      repo: ownerRepo[1],
+    })
+
+    let totals = 0
+    repoCom.data.map((stat) => {
+      totals += stat.total
+    })
+
+    repoCommits.push(totals)
+  }
+
+  return { repoData, repoCommits }
 }

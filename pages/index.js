@@ -12,10 +12,10 @@ export default function Home() {
     })
 
     let url = repoStrings.map((str) => {
-      return `/${encodeURIComponent(str.replace('/', '#'))}`
+      return `${encodeURIComponent(str.replace('/', '#'))}`
     })
 
-    window.location.href = `/compare${url.join('')}`
+    window.location.href = `/compare?repos=${url}`
   })
 
   return (
