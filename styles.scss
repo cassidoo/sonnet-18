@@ -1,0 +1,18 @@
+$background: #fcfcf5;
+$shadow: #e0e1dc;
+$green: #375b69;
+$red: #df5e68;
+
+body {
+  padding: 20px 20px 60px;
+  margin: 0;
+  background: $background;
+  color: $green;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
