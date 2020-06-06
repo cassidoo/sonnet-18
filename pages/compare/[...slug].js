@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { Octokit } from '@octokit/rest'
-import { GITHUB_KEY } from '../../keys'
 
 export function getStaticPaths() {
   return { paths: [], fallback: true }
@@ -13,7 +12,7 @@ export async function getStaticProps({ params }) {
   let repoCommits = []
 
   const octokit = new Octokit({
-    auth: GITHUB_KEY,
+    auth: process.env.GITHUB_KEY,
     userAgent: 'sonnet-18 v1.0.0',
     baseUrl: 'https://api.github.com',
   })
