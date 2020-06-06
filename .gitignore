@@ -24,6 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+keys.js
 .env.local
 .env.development.local
 .env.test.local
