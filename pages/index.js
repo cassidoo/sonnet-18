@@ -1,10 +1,6 @@
 import Head from 'next/head'
 import { useState, useCallback } from 'react'
 
-// https://api.github.com/users/username/repos
-
-function buildURL() {}
-
 export default function Home() {
   let [repos, setRepos] = useState([])
 
@@ -15,13 +11,9 @@ export default function Home() {
       return repo.replace(/^https:\/\/github.com\//i, '')
     })
 
-    console.log(repoStrings)
-
     let url = repoStrings.map((str) => {
       return `/${encodeURIComponent(str.replace('/', '#'))}`
     })
-
-    console.log(`/compare${url.join('')}`)
 
     window.location.href = `/compare${url.join('')}`
   })
