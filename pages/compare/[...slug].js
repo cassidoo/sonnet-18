@@ -2,6 +2,53 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Octokit } from '@octokit/rest'
 
+export function getStaticPaths() {
+  return { paths: [], fallback: true }
+}
+
+export async function getStaticProps({ params }) {
+  const repos = params.slug
+
+  let repoData = []
+  let repoCommits = []
+
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_KEY,
+    userAgent: 'sonnet-18 v1.0.0',
+    baseUrl: 'https://api.github.com',
+  })
+
+  for (let r of repos) {
+    let ownerRepo = r.split(':')
+
+    const repoRes = await octokit.repos.get({
+      owner: ownerRepo[0],
+      repo: ownerRepo[1],
+    })
+
+    repoData.push(repoRes.data)
+
+    const repoCom = await octokit.repos.getCommitActivityStats({
+      owner: ownerRepo[0],
+      repo: ownerRepo[1],
+    })
+
+    let totals = 0
+    repoCom.data.map((stat) => {
+      totals += stat.total
+    })
+
+    repoCommits.push(totals)
+  }
+
+  return {
+    props: { repos, repoData, repoCommits },
+
+    // Incremental re-generation:
+    unstable_revalidate: true,
+  }
+}
+
 export default function Compare(props) {
   const router = useRouter()
   if (router.isFallback) {
@@ -98,8 +145,8 @@ export default function Compare(props) {
             </tr>
             <tr>
               <td className="lead">Commits in the last year</td>
-              {repoCommits.map((c) => {
-                return <td key={`com-${c}`}>{c}</td>
+              {repoCommits.map((c, index) => {
+                return <td key={`com-${index}`}>{c}</td>
               })}
             </tr>
           </tbody>
@@ -110,42 +157,4 @@ export default function Compare(props) {
       </div>
     </main>
   )
-}
-
-Compare.getInitialProps = async ({ query }) => {
-  let repos = query.repos.split(',')
-
-  let repoData = []
-  let repoCommits = []
-
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_KEY,
-    userAgent: 'sonnet-18 v1.0.0',
-    baseUrl: 'https://api.github.com',
-  })
-
-  for (let r of repos) {
-    let ownerRepo = r.split('#')
-
-    const repoRes = await octokit.repos.get({
-      owner: ownerRepo[0],
-      repo: ownerRepo[1],
-    })
-
-    repoData.push(repoRes.data)
-
-    const repoCom = await octokit.repos.getCommitActivityStats({
-      owner: ownerRepo[0],
-      repo: ownerRepo[1],
-    })
-
-    let totals = 0
-    repoCom.data.map((stat) => {
-      totals += stat.total
-    })
-
-    repoCommits.push(totals)
-  }
-
-  return { repoData, repoCommits }
 }
