@@ -26,7 +26,7 @@ export async function getStaticProps({ params }) {
       repo: ownerRepo[1],
     })
 
-    repoData.push(repoRes.data)
+    repoData.push(repoRes?.data)
 
     const repoCom = await octokit.repos.getCommitActivityStats({
       owner: ownerRepo[0],
@@ -34,7 +34,7 @@ export async function getStaticProps({ params }) {
     })
 
     let totals = 0
-    repoCom.data.map((stat) => {
+    repoCom?.data?.map((stat) => {
       totals += stat.total
     })
 
