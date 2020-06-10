@@ -12,10 +12,8 @@ export default function Home() {
     })
 
     let url = repoStrings.map((str) => {
-      return `/${encodeURIComponent(str.replace('/', ':'))}`
+      return `/${str.replace('/', ':')}`
     })
-
-    console.log(url)
 
     window.location.href = `/compare${url.join('')}`
   })
