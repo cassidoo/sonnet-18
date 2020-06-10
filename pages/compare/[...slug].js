@@ -34,7 +34,7 @@ export async function getStaticProps({ params }) {
     })
 
     let totals = 0
-    repoCom?.data?.map((stat) => {
+    repoCom.data.map((stat) => {
       totals += stat.total
     })
 
@@ -77,80 +77,92 @@ export default function Compare(props) {
     return `${day} ${month} ${year}`
   }
 
-  const { repoData, repoCommits } = props
+  const repoData = props.repoData || null
+  const repoCommits = props.repoCommits || null
 
   return (
     <main>
       <h1>Sonnet 18</h1>
 
       <div className="comparisons">
-        <h2>
-          Comparing <span>{repoData.length}</span> repositories
-        </h2>
-        <table>
-          <thead>
-            <tr>
-              <th className="lead">Name</th>
-              {repoData.map((r) => {
-                return (
-                  <th key={`name-${r.id}`}>
-                    <a href={r.html_url}>{r.name}</a>
-                  </th>
-                )
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="lead">Owner</td>
-              {repoData.map((r) => {
-                let author = r.owner.login
+        {repoData !== null || repoCommits !== null ? (
+          <>
+            <h2>
+              Comparing <span>{repoData.length}</span> repositories
+            </h2>
+            <table>
+              <thead>
+                <tr>
+                  <th className="lead">Name</th>
+                  {repoData.map((r) => {
+                    return (
+                      <th key={`name-${r.id}`}>
+                        <a href={r.html_url}>{r.name}</a>
+                      </th>
+                    )
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="lead">Owner</td>
+                  {repoData.map((r) => {
+                    let author = r.owner.login
 
-                return (
-                  <td key={`owner-${r.id}`}>
-                    <a href={`https://github.com/${author}`} target="_blank">
-                      {author}
-                    </a>
-                  </td>
-                )
-              })}
-            </tr>
-            <tr>
-              <td className="lead">Stargazers</td>
-              {repoData.map((r) => {
-                return <td key={`stars-${r.id}`}>{r.stargazers_count}</td>
-              })}
-            </tr>
-            <tr>
-              <td className="lead">Created</td>
-              {repoData.map((r) => {
-                return (
-                  <td key={`updated-${r.id}`}>{formatDate(r.created_at)}</td>
-                )
-              })}
-            </tr>
-            <tr>
-              <td className="lead">Last updated</td>
-              {repoData.map((r) => {
-                return (
-                  <td key={`updated-${r.id}`}>{formatDate(r.pushed_at)}</td>
-                )
-              })}
-            </tr>
-            <tr>
-              <td className="lead">Open issues</td>
-              {repoData.map((r) => {
-                return <td key={`issues-${r.id}`}>{r.open_issues_count}</td>
-              })}
-            </tr>
-            <tr>
-              <td className="lead">Commits in the last year</td>
-              {repoCommits.map((c, index) => {
-                return <td key={`com-${index}`}>{c}</td>
-              })}
-            </tr>
-          </tbody>
-        </table>
+                    return (
+                      <td key={`owner-${r.id}`}>
+                        <a
+                          href={`https://github.com/${author}`}
+                          target="_blank"
+                        >
+                          {author}
+                        </a>
+                      </td>
+                    )
+                  })}
+                </tr>
+                <tr>
+                  <td className="lead">Stargazers</td>
+                  {repoData.map((r) => {
+                    return <td key={`stars-${r.id}`}>{r.stargazers_count}</td>
+                  })}
+                </tr>
+                <tr>
+                  <td className="lead">Created</td>
+                  {repoData.map((r) => {
+                    return (
+                      <td key={`updated-${r.id}`}>
+                        {formatDate(r.created_at)}
+                      </td>
+                    )
+                  })}
+                </tr>
+                <tr>
+                  <td className="lead">Last updated</td>
+                  {repoData.map((r) => {
+                    return (
+                      <td key={`updated-${r.id}`}>{formatDate(r.pushed_at)}</td>
+                    )
+                  })}
+                </tr>
+                <tr>
+                  <td className="lead">Open issues</td>
+                  {repoData.map((r) => {
+                    return <td key={`issues-${r.id}`}>{r.open_issues_count}</td>
+                  })}
+                </tr>
+                <tr>
+                  <td className="lead">Commits in the last year</td>
+                  {repoCommits.map((c, index) => {
+                    return <td key={`com-${index}`}>{c}</td>
+                  })}
+                </tr>
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <div>Something went wrong. Try refreshing!</div>
+        )}
         <Link href="/">
           <a className="goback">← Do another comparison</a>
         </Link>
